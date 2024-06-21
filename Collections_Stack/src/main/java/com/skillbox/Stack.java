@@ -1,6 +1,7 @@
 package com.skillbox;
 
 import java.util.Collection;
+
 public interface Stack<E> {
         // add new element to the top of the stack
         public void push(E element) throws StackException;
