@@ -3,22 +3,35 @@ package com.skillbox.service;
 import com.skillbox.Stack;
 import com.skillbox.StackException;
 import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Deque;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
 
 public class StackImpl implements Stack {
-    private final List<Object> list = new LinkedList<>();
+
+    private int MAX = 12;
+
+    private Deque<Object> list = new LinkedBlockingDeque<>(MAX);
+
 
     @Override
     public void push(Object element) throws StackException { // add new element to the top of the stack
+        if (this.getSize() >= MAX) {
+            throw new StackException("StackException");
+        }
         list.addLast(element);
     }
 
     @Override
     public Object pop() throws StackException { // return and remove an element from the top
 
-        return list.remove(list.size() - 1);
+        System.out.printf(String.format("size; %d", list.size()));
+        if (list.isEmpty() || this.getSize() == 1) {
+            throw new StackException("");
+        }
+
+        System.out.printf("size %d ", list.size());
+        return list.removeLast();
     }
 
     @Override
@@ -40,22 +53,26 @@ public class StackImpl implements Stack {
 
     @Override
     public boolean isFull() {
-        return false ;
+
+        return this.getSize() >= MAX ;
     }
 
     @Override
     public void setMaxSize(int size) {
 
+        MAX = size;
+
+        list = new LinkedBlockingDeque<>(MAX);
     }
 
     @Override
     public void pushAll(Collection src) throws StackException { // add all elements from @src to the stack
 
-        list.add(src.stream().collect(Collectors.toList()));
+
     }
 
     @Override
     public void popAll(Collection dst) throws StackException { // pop all elements from stack to @dst
-        dst.add(list.stream().collect(Collectors.toList()));
+
     }
 }
