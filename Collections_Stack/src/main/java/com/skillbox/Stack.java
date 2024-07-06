@@ -8,7 +8,7 @@ public interface Stack<E> {
         // return and remove an element from the top
         public E pop() throws StackException;
         // return the top element but doesn’t remove
-        public E peek();
+        public E peek() throws StackException;
         public int getSize();
         public boolean isEmpty();
         public boolean isFull();
