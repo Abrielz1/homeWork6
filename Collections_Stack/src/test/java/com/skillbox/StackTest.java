@@ -1,6 +1,8 @@
 package com.skillbox;
 
-import com.skillbox.service.StackImpl;
+import com.skillbox.service.ArrayStackImpl;
+import com.skillbox.service.Stack;
+//import com.skillbox.service.StackImpl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,11 +13,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class StackTest {
-    private com.skillbox.Stack<String> stack = new StackImpl();
+    private com.skillbox.service.Stack<String> stack = new ArrayStackImpl();
 
     @Before
     public void setUp() throws Exception {
-        Class<?> stackInterface = com.skillbox.Stack.class;
+        Class<?> stackInterface = com.skillbox.service.Stack.class;
         Reflections reflections = new Reflections("com.skillbox", new SubTypesScanner(false));
         Set<Class<?>> classes = reflections.getSubTypesOf(Object.class)
                 .stream()
@@ -100,7 +102,7 @@ public class StackTest {
     public void testPopAll() throws StackException {
         List<String> strings = Arrays.asList("1", "2", "3");
         stack.pushAll(strings);
-        int size = stack.getSize();
+        int size;
         List<String> actual = new ArrayList<>();
         stack.popAll(actual);
         Assert.assertEquals(strings.stream().sorted((a,b) -> -a.compareTo(b)).collect(Collectors.toList()), actual);

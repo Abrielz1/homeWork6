@@ -2,17 +2,20 @@ package com.skillbox.service;
 
 import com.skillbox.model.League;
 import com.skillbox.model.Player;
-import com.skillbox.model.Race;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import static com.skillbox.model.League.GOLD;
+import static com.skillbox.model.Race.ELF;
+import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNull;
 
 public class LeagueManagerTest {
     private LeagueManager leagueManager;
@@ -37,18 +40,36 @@ public class LeagueManagerTest {
 
     @Test
     public void testAddPlayer() {
-        leagueManager.addPlayer(generatePlayer());
+        Player player = this.generatePlayer();
+        leagueManager.addPlayer(player);
+
+        assertEquals(player.getNickName(), leagueManager.getPlayer(player.getNickName()).getNickName());
+        assertEquals(player.getLeague(), leagueManager.getPlayer(player.getNickName()).getLeague());
+        assertEquals(player.getRace(), leagueManager.getPlayer(player.getNickName()).getRace());
+        assertEquals(player.getPoints(), leagueManager.getPlayer(player.getNickName()).getPoints());
+
+        assertEquals(player, leagueManager.getPlayer(player.getNickName()));
     }
 
     @Test
     public void testRemovePlayer() {
-        leagueManager.addPlayer(generatePlayer());
-        leagueManager.removePlayer(generatePlayer());
+        Player player = this.generatePlayer();
+        leagueManager.addPlayer(player);
+
+        assertEquals(player.getNickName(), leagueManager.getPlayer(player.getNickName()).getNickName());
+        assertEquals(player.getLeague(), leagueManager.getPlayer(player.getNickName()).getLeague());
+        assertEquals(player.getRace(), leagueManager.getPlayer(player.getNickName()).getRace());
+        assertEquals(player.getPoints(), leagueManager.getPlayer(player.getNickName()).getPoints());
+
+        assertEquals(player, leagueManager.getPlayer(player.getNickName()));
+
+        leagueManager.removePlayer(player);
+        assertNull(leagueManager.getPlayer(player.getNickName()));
     }
 
     @Test
     public void testGetPlayer() {
-        Player player = generatePlayer();
+        Player player = this.generatePlayer();
         leagueManager.addPlayer(player);
         Player actual = leagueManager.getPlayer(player.getNickName());
         Assert.assertEquals(player, actual);
@@ -56,14 +77,41 @@ public class LeagueManagerTest {
 
     @Test
     public void testGetAllPlayers() {
+        Player[] players = new Player[10];
+
+        for (int i = 0; i < players.length; i++) {
+            Player player = new Player("NickNmae" + i, i * 10 + i, GOLD ,ELF);
+            players[i] = player;
+            leagueManager.addPlayer(player);
+        }
+
+        assertArrayEquals(players, leagueManager.getAllPlayers());
     }
 
     @Test
     public void testGetPlayersByRace() {
+        Player[] players = new Player[10];
+
+        for (int i = 0; i < players.length; i++) {
+            Player player = new Player("NickNmae" + i, i * 10 + i, GOLD ,ELF);
+            players[i] = player;
+            leagueManager.addPlayer(player);
+        }
+
+        assertArrayEquals(players, leagueManager.getPlayers(ELF));
     }
 
     @Test
     public void testGetPlayersByLeague() {
+        Player[] players = new Player[10];
+
+        for (int i = 0; i < players.length; i++) {
+            Player player = new Player("NickNmae" + i, i * 10 + i, GOLD ,ELF);
+            players[i] = player;
+            leagueManager.addPlayer(player);
+        }
+
+        assertArrayEquals(players, leagueManager.getPlayers(GOLD));
     }
 
     @Test
@@ -79,6 +127,6 @@ public class LeagueManagerTest {
     }
 
     Player generatePlayer() {
-        return new Player("name", 1, League.BRONZE, Race.ELF);
+        return new Player("name", 1, League.BRONZE, ELF);
     }
 }
